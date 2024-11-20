@@ -1,0 +1,20 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using FinancialManager.Models
+@inject SignInManager<ApplicationUser> SignInManager
+
+@{
+    ViewData["Title"] = "Home Page";
+}
+@if (!SignInManager.IsSignedIn(User))
+{
+    <div style="display: flex; align-items: center; justify-content: center; height: 50vh;">
+        <div class="text-center">
+            <h1 class="display-4">Welcome to Financial Manager, friend!</h1>
+            <p>Log in to start tracking your money.</p>
+            <div class="d-flex justify-content-center">
+                <a class="btn btn-success btn-lg" style="width: 150px;" asp-area="Identity" asp-page="/Account/Login">Login</a>  
+            </div>
+        </div>
+    </div>
+}
+
