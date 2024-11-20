@@ -8388,11 +8388,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "H:\\Projects\\FinancialManager\\FinancialManager.csproj",
+      "projectUniqueName": "H:\\Projects\\FinancialManager\\FinancialManager\\FinancialManager.csproj",
       "projectName": "FinancialManager",
-      "projectPath": "H:\\Projects\\FinancialManager\\FinancialManager.csproj",
+      "projectPath": "H:\\Projects\\FinancialManager\\FinancialManager\\FinancialManager.csproj",
       "packagesPath": "C:\\Users\\Jake\\.nuget\\packages\\",
-      "outputPath": "H:\\Projects\\FinancialManager\\obj\\",
+      "outputPath": "H:\\Projects\\FinancialManager\\FinancialManager\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\Jake\\AppData\\Roaming\\NuGet\\NuGet.Config"
