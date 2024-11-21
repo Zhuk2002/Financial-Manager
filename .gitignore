@@ -1,0 +1,19 @@
+# Игнорировать папки сборки
+bin/
+obj/
+
+# Игнорировать файлы кеша
+*.cache
+*.pdb
+
+# Игнорировать временные файлы IDE
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Игнорировать временные файлы SQLite
+*.db
+*.db-shm
+*.db-wal
