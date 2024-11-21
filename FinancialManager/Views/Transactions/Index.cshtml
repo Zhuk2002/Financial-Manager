@@ -4,9 +4,8 @@
     ViewData["Title"] = "Transactions";
 }
 
-<div class="d-flex align-items-center">
+<div class="d-flex justify-content-center align-items-center">
     <h1 class="me-3">Transactions</h1>
-    <a asp-action="Create" class="btn btn-success">Create New</a>
 </div>
 <table class="table table-bordered table-hover">
     <thead class="table-dark">
@@ -46,6 +45,7 @@
         }
     </tbody>
 </table>
+<a asp-action="Create" class="btn btn-success">Create New</a>
 @*
 <table class="table">
     <thead>
