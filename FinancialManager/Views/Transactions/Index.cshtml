@@ -1,9 +1,13 @@
+@using Microsoft.AspNetCore.Identity
 @model IEnumerable<Transaction>
+@inject UserManager<ApplicationUser> UserManager
 
 @{
     ViewData["Title"] = "Transactions";
 }
-
+<div>
+    Balance: @UserManager.GetUserAsync(User).Result.Balance
+</div>
 <div class="d-flex justify-content-center align-items-center">
     <h1 class="me-3">Transactions</h1>
 </div>

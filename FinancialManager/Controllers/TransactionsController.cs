@@ -32,6 +32,21 @@ namespace FinancialManager.Controllers
         //     var applicationDbContext = _context.Transactions.Include(t => t.User);
         //     return View(await applicationDbContext.ToListAsync());
         // }
+
+        public async Task<IActionResult> UpdateBalance(decimal amount)
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return NotFound("User not found");
+            }
+
+            user.Balance += amount;
+            await _userManager.UpdateAsync(user);
+
+            return RedirectToAction("Index");
+        }
+
         public async Task<IActionResult> Index()
         {
             var userId = _userManager.GetUserId(User);
@@ -83,7 +98,16 @@ namespace FinancialManager.Controllers
             // transaction.UserId = _userManager.GetUserId(User);
             if (ModelState.IsValid)
             {
+                var user = await _userManager.GetUserAsync(User);
+                if (user == null) return NotFound("User not found");
+
+                if (transaction.IsIncome)
+                    user.Balance += transaction.Amount;
+                else
+                    user.Balance -= transaction.Amount;
+
                 _context.Add(transaction);
+                await _userManager.UpdateAsync(user);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
