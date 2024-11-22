@@ -33,6 +33,14 @@ namespace FinancialManager.Controllers
         //     return View(await applicationDbContext.ToListAsync());
         // }
 
+        public IActionResult UpdateBalanceView()
+        {
+            ViewBag.showUpdateBalance = true;
+            return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        // [ValidateAntiForgeryToken]
         public async Task<IActionResult> UpdateBalance(decimal amount)
         {
             var user = await _userManager.GetUserAsync(User);
@@ -41,8 +49,9 @@ namespace FinancialManager.Controllers
                 return NotFound("User not found");
             }
 
-            user.Balance += amount;
+            user.Balance = amount;
             await _userManager.UpdateAsync(user);
+            ViewBag.showUpdateBalance = false;
 
             return RedirectToAction("Index");
         }
@@ -101,10 +110,7 @@ namespace FinancialManager.Controllers
                 var user = await _userManager.GetUserAsync(User);
                 if (user == null) return NotFound("User not found");
 
-                if (transaction.IsIncome)
-                    user.Balance += transaction.Amount;
-                else
-                    user.Balance -= transaction.Amount;
+                user.Balance = transaction.IsIncome ? user.Balance + transaction.Amount : user.Balance - transaction.Amount;
 
                 _context.Add(transaction);
                 await _userManager.UpdateAsync(user);
@@ -147,13 +153,22 @@ namespace FinancialManager.Controllers
                 return NotFound();
             }
             transaction.UserId = _userManager.GetUserId(User);
-            Console.WriteLine(transaction.UserId);
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null) return NotFound("User not found");
+
             if (ModelState.IsValid)
             {
                 try
                 {
-                    //Попробовать transaction.UserId = _userManager.GetUserId(User);
+                    var currentTransaction = await _context.Transactions.AsNoTracking().FirstOrDefaultAsync(t => t.Id == id);
+                    if (currentTransaction != null)
+                    {
+                        // if(transaction.IsIncome != currentTransaction.IsIncome)
+                        decimal deltaAmount = (transaction.IsIncome == currentTransaction.IsIncome) ? transaction.Amount - currentTransaction.Amount : transaction.Amount + currentTransaction.Amount;
+                        user.Balance = transaction.IsIncome ? user.Balance + deltaAmount : user.Balance - deltaAmount;
+                    }
                     _context.Update(transaction);
+                    await _userManager.UpdateAsync(user);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -203,11 +218,17 @@ namespace FinancialManager.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var transaction = await _context.Transactions.FindAsync(id);
+
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null) return NotFound("User not found");
+            
             if (transaction != null)
             {
+                user.Balance = transaction.IsIncome ? user.Balance - transaction.Amount : user.Balance + transaction.Amount;
                 _context.Transactions.Remove(transaction);
             }
 
+            await _userManager.UpdateAsync(user);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }

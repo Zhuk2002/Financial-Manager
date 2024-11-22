@@ -57,3 +57,7 @@ footer {
 .form-floating>label {
     color: #000000;
 }
+
+.form-control::placeholder {
+    color:#000000;
+}
