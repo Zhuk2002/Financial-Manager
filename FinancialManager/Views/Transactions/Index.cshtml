@@ -1,13 +1,22 @@
+@using Microsoft.AspNetCore.Identity
 @model IEnumerable<Transaction>
+@inject UserManager<ApplicationUser> UserManager
 
 @{
     ViewData["Title"] = "Transactions";
+    @* bool showUpdateBalance = false; *@
 }
-
 <div class="d-flex justify-content-center align-items-center">
     <h1 class="me-3">Transactions</h1>
 </div>
-<table class="table table-bordered table-hover">
+<form asp-action="UpdateBalance" method="post" class="d-inline">
+    <h3>Balance: </h3>
+    <input type="number" value=@UserManager.GetUserAsync(User).Result.Balance.ToString() name="amount" step="0.01" class="form-control d-inline w-auto me-2" placeholder=@UserManager.GetUserAsync(User).Result.Balance.ToString() required />
+
+    <button type="submit" class="btn btn-primary">Update Balance</button>
+</form>
+
+<table class="table table-bordered table-hover mt-3">
     <thead class="table-dark">
         <tr>
             <th>@Html.DisplayNameFor(model => model.Amount)</th>
