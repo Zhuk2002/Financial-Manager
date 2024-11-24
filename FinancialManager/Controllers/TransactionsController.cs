@@ -24,15 +24,6 @@ namespace FinancialManager.Controllers
             _userManager = userManager;
         }
 
-        // GET: Transactions
-        // public async Task<IActionResult> Index()
-        // {
-        //     var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        //     var transactions = _context.Transactions.Where(t => t.UserId == userId).ToList();
-        //     var applicationDbContext = _context.Transactions.Include(t => t.User);
-        //     return View(await applicationDbContext.ToListAsync());
-        // }
-
         public IActionResult UpdateBalanceView()
         {
             ViewBag.showUpdateBalance = true;
@@ -40,7 +31,7 @@ namespace FinancialManager.Controllers
         }
 
         [HttpPost]
-        // [ValidateAntiForgeryToken]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> UpdateBalance(decimal amount)
         {
             var user = await _userManager.GetUserAsync(User);
@@ -87,11 +78,9 @@ namespace FinancialManager.Controllers
         // GET: Transactions/Create
         public IActionResult Create()
         {
-            // ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id");
-            // ViewData["UserId"] = _userManager.GetUserId(User);
             var transaction = new Transaction
             {
-                Date = DateTime.Now, // Устанавливаем сегодняшнюю дату
+                Date = DateTime.Now,
                 UserId = _userManager.GetUserId(User)
             };
             return View(transaction);
@@ -104,7 +93,6 @@ namespace FinancialManager.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Amount,Description,Date,IsIncome,UserId")] Transaction transaction)
         {
-            // transaction.UserId = _userManager.GetUserId(User);
             if (ModelState.IsValid)
             {
                 var user = await _userManager.GetUserAsync(User);
@@ -117,7 +105,6 @@ namespace FinancialManager.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            // ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", transaction.UserId);
             return View(transaction);
         }
 
@@ -135,8 +122,6 @@ namespace FinancialManager.Controllers
             {
                 return NotFound();
             }
-            // ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", transaction.UserId);
-            // ViewData["UserId"] = _userManager.GetUserId(User);
             transaction.UserId = _userManager.GetUserId(User);
             return View(transaction);
         }
@@ -163,7 +148,6 @@ namespace FinancialManager.Controllers
                     var currentTransaction = await _context.Transactions.AsNoTracking().FirstOrDefaultAsync(t => t.Id == id);
                     if (currentTransaction != null)
                     {
-                        // if(transaction.IsIncome != currentTransaction.IsIncome)
                         decimal deltaAmount = (transaction.IsIncome == currentTransaction.IsIncome) ? transaction.Amount - currentTransaction.Amount : transaction.Amount + currentTransaction.Amount;
                         user.Balance = transaction.IsIncome ? user.Balance + deltaAmount : user.Balance - deltaAmount;
                     }
@@ -189,7 +173,6 @@ namespace FinancialManager.Controllers
                 {
                     Console.WriteLine(error.ErrorMessage);
                 }
-            // ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", transaction.UserId);
             return View(transaction);
         }
 

@@ -7,9 +7,10 @@ public class Transaction
     public int Id { get; set; }
 
     [Required]
+    [Range(-10000000, 10000000, ErrorMessage = "Let's be realistic")]
     public decimal Amount { get; set; }
 
-    [StringLength(100)]
+    [StringLength(50)]
     public string? Description { get; set; }
 
     [Required]
